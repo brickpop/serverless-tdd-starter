@@ -1,0 +1,21 @@
+{
+  "name": "my-api",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "deploy": "npm test && sls deploy --stage staging",
+    "deploy:prod": "npm test && sls deploy --stage prod",
+    "start": "serverless offline start",
+    "test": "serverless invoke test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless-mocha-plugin": "^1.8.3",
+    "serverless-offline": "^3.25.6"
+  },
+  "dependencies": {
+    "mongodb": "^3.1.1"
+  }
+}

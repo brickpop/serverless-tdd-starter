@@ -1,0 +1,52 @@
+service: my-api
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, "dev"}  # overriden by serverless --stage xxxx
+  region: eu-central-1
+  environment: 
+    # Try to fetch MY_API_MONGODB_URL_xxxx from SSM.
+    # Use "mongodb://localhost:27017" if the above doesn't exist
+    MONGODB_URL: ${ssm:MY_API_MONGODB_URL_${self:provider.stage}~true, "mongodb://localhost:27017"}
+
+functions:
+  listUsers:
+    handler: handlers/users.list
+    events:
+      - http:
+          path: /users
+          method: get
+          cors: true
+  getUser:
+    handler: handlers/users.get
+    events:
+      - http:
+          path: /users/{id+}
+          method: get
+          cors: true
+  addUser:
+    handler: handlers/users.add
+    events:
+      - http:
+          path: /users
+          method: post
+          cors: true
+  updateUser:
+    handler: handlers/users.update
+    events:
+      - http:
+          path: /users/{id+}
+          method: put
+          cors: true
+  removeUser:
+    handler: handlers/users.remove
+    events:
+      - http:
+          path: /users
+          method: delete
+          cors: true
+
+plugins:
+  - serverless-offline
+  - serverless-mocha-plugin
