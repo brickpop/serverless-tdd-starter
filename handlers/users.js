@@ -10,10 +10,11 @@ exports.list = async (event, context) => {
   var dbClient
   try {
     dbClient = await MongoClient.connect(uri)
+    if (!dbClient) throw new Error("Failed to connect to the database")
     const dbUsers = dbClient.db(dbName).collection(dbCollection)
 
     const users = await dbUsers.find().toArray()
-    if (dbClient) dbClient.close()
+    dbClient.close()
     return {
       statusCode: 200,
       body: JSON.stringify(users)
@@ -40,11 +41,12 @@ exports.get = async (event, context) => {
 
   try {
     dbClient = await MongoClient.connect(uri)
+    if (!dbClient) throw new Error("Failed to connect to the database")
     const dbUsers = dbClient.db(dbName).collection(dbCollection)
 
     const user = await dbUsers.findOne({ _id: ObjectID(event.pathParameters.id) })
 
-    if (dbClient) dbClient.close()
+    dbClient.close()
     if (!user) {
       return { statusCode: 404, body: "" }
     }
@@ -74,10 +76,11 @@ exports.add = async (event, context) => {
   try {
     body = JSON.parse(event.body)
     dbClient = await MongoClient.connect(uri)
+    if (!dbClient) throw new Error("Failed to connect to the database")
     const dbUsers = dbClient.db(dbName).collection(dbCollection)
 
     const result = await dbUsers.insert(body)
-    if (dbClient) dbClient.close()
+    dbClient.close()
     return {
       statusCode: 200,
       body: JSON.stringify({ _id: result.insertedIds[0] })
@@ -104,10 +107,11 @@ exports.update = async (event, context) => {
   try {
     body = JSON.parse(event.body)
     dbClient = await MongoClient.connect(uri)
+    if (!dbClient) throw new Error("Failed to connect to the database")
     const dbUsers = dbClient.db(dbName).collection(dbCollection)
 
     const result = await dbUsers.findOneAndUpdate({ _id: ObjectID(event.pathParameters.id) }, { $set: body })
-    if (dbClient) dbClient.close()
+    dbClient.close()
     if (!result) {
       return { statusCode: 404, body: "" }
     }
@@ -138,10 +142,11 @@ exports.remove = async (event, context) => {
 
   try {
     dbClient = await MongoClient.connect(uri)
+    if (!dbClient) throw new Error("Failed to connect to the database")
     const dbUsers = dbClient.db(dbName).collection(dbCollection)
 
     const result = await dbUsers.findOneAndDelete({ _id: ObjectID(event.pathParameters.id) })
-    if (dbClient) dbClient.close()
+    dbClient.close()
     if (!result || !result.value) {
       return { statusCode: 404, body: "" }
     }
