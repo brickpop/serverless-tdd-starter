@@ -13,14 +13,14 @@ exports.list = async (event, context) => {
     const dbUsers = dbClient.db(dbName).collection(dbCollection)
 
     const users = await dbUsers.find().toArray()
-    dbClient.close()
+    if (dbClient) dbClient.close()
     return {
       statusCode: 200,
       body: JSON.stringify(users)
     }
   }
   catch (err) {
-    dbClient.close()
+    if (dbClient) dbClient.close()
     return {
       statusCode: 500,
       body: err.message
@@ -44,7 +44,7 @@ exports.get = async (event, context) => {
 
     const user = await dbUsers.findOne({ _id: ObjectID(event.pathParameters.id) })
 
-    dbClient.close()
+    if (dbClient) dbClient.close()
     if (!user) {
       return { statusCode: 404, body: "" }
     }
@@ -56,7 +56,7 @@ exports.get = async (event, context) => {
     }
   }
   catch (err) {
-    dbClient.close()
+    if (dbClient) dbClient.close()
     return {
       statusCode: 500,
       body: err.message
@@ -77,14 +77,14 @@ exports.add = async (event, context) => {
     const dbUsers = dbClient.db(dbName).collection(dbCollection)
 
     const result = await dbUsers.insert(body)
-    dbClient.close()
+    if (dbClient) dbClient.close()
     return {
       statusCode: 200,
       body: JSON.stringify({ _id: result.insertedIds[0] })
     }
   }
   catch (err) {
-    dbClient.close()
+    if (dbClient) dbClient.close()
     return {
       statusCode: 500,
       body: err.message
@@ -107,7 +107,7 @@ exports.update = async (event, context) => {
     const dbUsers = dbClient.db(dbName).collection(dbCollection)
 
     const result = await dbUsers.findOneAndUpdate({ _id: ObjectID(event.pathParameters.id) }, { $set: body })
-    dbClient.close()
+    if (dbClient) dbClient.close()
     if (!result) {
       return { statusCode: 404, body: "" }
     }
@@ -119,7 +119,7 @@ exports.update = async (event, context) => {
     }
   }
   catch (err) {
-    dbClient.close()
+    if (dbClient) dbClient.close()
     return {
       statusCode: 500,
       body: err.message
@@ -141,7 +141,7 @@ exports.remove = async (event, context) => {
     const dbUsers = dbClient.db(dbName).collection(dbCollection)
 
     const result = await dbUsers.findOneAndDelete({ _id: ObjectID(event.pathParameters.id) })
-    dbClient.close()
+    if (dbClient) dbClient.close()
     if (!result || !result.value) {
       return { statusCode: 404, body: "" }
     }
@@ -153,7 +153,7 @@ exports.remove = async (event, context) => {
     }
   }
   catch (err) {
-    dbClient.close()
+    if (dbClient) dbClient.close()
     return {
       statusCode: 500,
       body: err.message
