@@ -7,20 +7,30 @@ const UserSchema = require("../models/user.js")
 const uri = process.env.MONGODB_URL
 const poolSize = process.env.POOL_SIZE || 30
 
-let conn = null
+///////////////////////////////////////////////////////////////////////////////
+// DATABASE
+///////////////////////////////////////////////////////////////////////////////
+
+let dbConnection = null
 let User
+
 async function ensureDbConnected() {
-  // connect if not already connected
-  if (!conn) {
-    conn = await mongoose.createConnection(uri, {
+  // Connect if not already connected
+  if (!dbConnection) {
+    dbConnection = await mongoose.createConnection(uri, {
       // With serverless, better to fail fast if not connected
       poolSize,
       bufferCommands: false,
       bufferMaxEntries: 0
     })
-    User = conn.model("User", UserSchema)
+    // Register the DB models here
+    User = dbConnection.model("User", UserSchema)
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// HANDLERS
+///////////////////////////////////////////////////////////////////////////////
 
 exports.list = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false

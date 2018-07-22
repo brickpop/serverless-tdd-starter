@@ -1,5 +1,5 @@
 'use strict'
-const GLOBAL_TIMEOUT = 7 * 1000
+const GLOBAL_TIMEOUT = 10 * 1000
 
 const mochaPlugin = require('serverless-mocha-plugin')
 const expect = mochaPlugin.chai.expect

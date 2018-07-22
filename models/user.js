@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
+const mongoose = require("mongoose")
+const { Schema } = mongoose
 
 const schema = new Schema(
     {
@@ -20,6 +20,6 @@ const schema = new Schema(
     {
         collection: "users"
     }
-);
+)
 
-module.exports = schema;
+module.exports = schema
