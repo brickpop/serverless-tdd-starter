@@ -1,4 +1,5 @@
 'use strict'
+const GLOBAL_TIMEOUT = 7 * 1000
 
 const mochaPlugin = require('serverless-mocha-plugin')
 const expect = mochaPlugin.chai.expect
@@ -22,7 +23,8 @@ describe('My API', () => {
   })
 
   it('getUser should return 404 if not found', () => {
-    return wrappedGet.run({ pathParameters: { id: "00000f1afa7663142200d252" } }).then(response => {
+    const nonExistingId = "000000000000000011112222"
+    return wrappedGet.run({ pathParameters: { id: nonExistingId } }).then(response => {
       expect(response).to.not.be.empty
       expect(response.statusCode).to.equal(404)
       expect(response.body).to.equal("")
@@ -30,7 +32,8 @@ describe('My API', () => {
   })
 
   it('updateUser should return 404 if not found', () => {
-    return wrappedAdd.run({ pathParameters: { id: "00000f1afa7663142200d252" } }).then(response => {
+    const nonExistingId = "000000000000000011112222"
+    return wrappedAdd.run({ pathParameters: { id: nonExistingId } }).then(response => {
       expect(response).to.not.be.empty
       expect(response.statusCode).to.equal(404)
       expect(response.body).to.equal("")
@@ -38,7 +41,8 @@ describe('My API', () => {
   })
 
   it('removeUser should return 404 if not found', () => {
-    return wrappedRemove.run({ pathParameters: { id: "00000f1afa7663142200d252" } }).then(response => {
+    const nonExistingId = "000000000000000011112222"
+    return wrappedRemove.run({ pathParameters: { id: nonExistingId } }).then(response => {
       expect(response).to.not.be.empty
       expect(response.statusCode).to.equal(404)
       expect(response.body).to.equal("")
@@ -159,3 +163,11 @@ describe('My API', () => {
   })
 
 })
+
+afterEach(function () {
+  if (this.currentTest.state === 'failed') {
+    process.exitCode = 1
+  }
+})
+
+setTimeout(() => process.exit(process.exitCode), GLOBAL_TIMEOUT)
