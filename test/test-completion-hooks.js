@@ -5,7 +5,7 @@ function started() {
 }
 
 function completed() {
-    if (--testSuites == 0) {
+    if (--testSuites <= 0) {
         setImmediate(() => process.exit(process.exitCode))
     }
 }
@@ -18,7 +18,7 @@ function addCompletionHooks() {
     // Mocha hooks will run on the context of
     // the spec file calling this function
     before(started)
-    
+
     after(completed)
 
     afterEach(function () {

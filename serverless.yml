@@ -48,5 +48,6 @@ functions:
           cors: true
 
 plugins:
+  - serverless-webpack
   - serverless-offline
   - serverless-mocha-plugin
