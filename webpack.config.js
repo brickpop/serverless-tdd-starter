@@ -1,4 +1,4 @@
-const slsw = require('serverless-webpack');
+const slsw = require('serverless-webpack')
 
 const config = {
     entry: slsw.lib.entries,
