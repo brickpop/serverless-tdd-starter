@@ -2,7 +2,7 @@
 
 const mochaPlugin = require('serverless-mocha-plugin')
 const expect = mochaPlugin.chai.expect
-const { started, completed, failed } = require("./test-hooks.js")
+const addCompletionHooks = require("./test-completion-hooks")
 
 const wrappedList = mochaPlugin.getWrapper('listUsers', '/handlers/users.js', 'list')
 const wrappedGet = mochaPlugin.getWrapper('getUser', '/handlers/users.js', 'get')
@@ -12,17 +12,7 @@ const wrappedRemove = mochaPlugin.getWrapper('removeUser', '/handlers/users.js',
 
 // Completion hooks
 
-started()
-
-afterEach(function () {
-  if (this.currentTest.state === 'failed') {
-    failed()
-  }
-})
-
-after(function () {
-  completed()
-})
+addCompletionHooks()
 
 // Specs
 
