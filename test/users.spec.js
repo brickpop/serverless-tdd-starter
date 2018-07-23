@@ -1,14 +1,30 @@
 'use strict'
-const GLOBAL_TIMEOUT = 10 * 1000
 
 const mochaPlugin = require('serverless-mocha-plugin')
 const expect = mochaPlugin.chai.expect
+const { started, completed, failed } = require("./test-hooks.js")
 
 const wrappedList = mochaPlugin.getWrapper('listUsers', '/handlers/users.js', 'list')
 const wrappedGet = mochaPlugin.getWrapper('getUser', '/handlers/users.js', 'get')
 const wrappedAdd = mochaPlugin.getWrapper('addUser', '/handlers/users.js', 'add')
 const wrappedUpdate = mochaPlugin.getWrapper('updateUser', '/handlers/users.js', 'update')
 const wrappedRemove = mochaPlugin.getWrapper('removeUser', '/handlers/users.js', 'remove')
+
+// Completion hooks
+
+started()
+
+afterEach(function () {
+  if (this.currentTest.state === 'failed') {
+    failed()
+  }
+})
+
+after(function () {
+  completed()
+})
+
+// Specs
 
 describe('My API', () => {
   it('listUsers should return an empty list by default', () => {
@@ -163,11 +179,3 @@ describe('My API', () => {
   })
 
 })
-
-afterEach(function () {
-  if (this.currentTest.state === 'failed') {
-    process.exitCode = 1
-  }
-})
-
-setTimeout(() => process.exit(process.exitCode), GLOBAL_TIMEOUT)
