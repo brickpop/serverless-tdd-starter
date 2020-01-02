@@ -1,5 +1,6 @@
 # Serverless TDD starter
-TDD starter project for NodeJS and Serverless
+Test Driven Development starter for Serverless and NodeJS.
+Featuring persistent MongoDB connections with suspended execution.
 
 To get started, read the full article on Medium: 
 
